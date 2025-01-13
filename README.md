@@ -1,4 +1,4 @@
 # Project: go-backend
-- step1
-  ## Launch an AWS EC2 Instance
-  
+## project workflow
+- Step 1 > launch ec2 instances
+-  Step 2 >
