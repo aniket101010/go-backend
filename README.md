@@ -61,37 +61,11 @@ sudo vi dockerfile
 ````
 ## Copy Code for Dockerfile from backend directory
 ````
-## next enter command image build
-````
-docker build -t backaend .
+docker build -t backend .
 ````
 ## go back
 ````
 cd ..
 ````
 ## create Frontend directory
-````
- mkdir fonted
-````
-cd fontend
-## Create dockerfile and index.html
-````
-sudo vi dockerfile
-````
-  FROM nginx:alpine
-   COPY index.html /usr/share/nginx/html/
-````
-sudo vi index.html
-````
- <html>
-   <head>
-     <title>Static Frontend</title>
-   </head>
-   <body>
-     <h1>Welcome to the Static Frontend!</h1>
-   </body>
-   </html>
-````
-## build image
-````
-docker build -t 
+```
