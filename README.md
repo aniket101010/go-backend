@@ -43,6 +43,7 @@ OpenJDK 64-Bit Server VM (build 17.0.13+11-Debian-2, mixed mode, sharing)
 ````
 sudo apt install -y golang-go
 ````
+- step 3
 ## Create Directory backend
 ````
 mkdir backend
@@ -77,4 +78,6 @@ mkdir frontend
 ````
 docker build -t frontend-image .
 ````
-
+ 
+- step 4
+  ## Create a terraform directory and in that create a main.tf file and copy code from terraform directory
