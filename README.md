@@ -67,5 +67,14 @@ docker build -t backend .
 ````
 cd ..
 ````
-## create Frontend directory
-```
+## Create Frontend directory
+````
+mkdir frontend
+````
+## Create index.html file and copy code from frontend directory
+## Create a dockerfile and paste the code from backend directory
+## Build Docker image
+````
+docker build -t frontend-image .
+````
+
