@@ -50,7 +50,7 @@ mkdir backend
 ````
 cd backend
 ````
-````
 ### Create main.go file and copy the code from main.go file in backend directory
+````
 sudo vim main.go
 ````
