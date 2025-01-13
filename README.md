@@ -81,3 +81,14 @@ docker build -t frontend-image .
  
 - step 4
   ## Create a terraform directory and in that create a main.tf file and copy code from terraform directory
+  ````
+  terraform init
+  ````
+````
+terraform plan
+````
+terraform validate
+````
+````
+terraform apply
+````
