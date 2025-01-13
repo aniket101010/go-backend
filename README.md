@@ -87,6 +87,7 @@ docker build -t frontend-image .
 ````
 terraform plan
 ````
+````
 terraform validate
 ````
 ````
