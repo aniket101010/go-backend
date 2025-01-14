@@ -7,10 +7,16 @@ sudo apt update
 ````
 ## Install Docker
 ````
-sudo apt install -y docker.io docker-compose
+sudo apt install -y docker.io 
    sudo systemctl enable docker
    sudo systemctl start docker
-   sudo usermod -aG docker $USER
+   sudo usermod -aG docker jenkins
+````
+## Docker-Compose
+
+````
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 ````
  ## Install Terraform
 ````
@@ -43,56 +49,50 @@ OpenJDK 64-Bit Server VM (build 17.0.13+11-Debian-2, mixed mode, sharing)
 ````
 sudo apt install -y golang-go
 ````
-- step 3
-## Create Directory backend
-````
-mkdir backend
-````
-````
-cd backend
-````
-### Create main.go file and copy the code from main.go file in backend directory
-````
-sudo vim main.go
-````
 
-## create Dockerfile 
-````
-sudo vi dockerfile
-````
-## Copy Code for Dockerfile from backend directory
-````
-docker build -t backend .
-````
-## go back
-````
-cd ..
-````
-## Create Frontend directory
-````
-mkdir frontend
-````
-## Create index.html file and copy code from frontend directory
-## Create a dockerfile and paste the code from backend directory
-## Build Docker image
-````
-docker build -t frontend-image .
-````
- 
-- step 4
-  ## Create a terraform directory and in that create a main.tf file and copy code from terraform directory
-  ````
-  terraform init
-  ````
-````
-terraform plan
-````
-![Screenshot 2025-01-14 142245](https://github.com/user-attachments/assets/488c1508-a236-45ee-990e-dceeabbc9040)
-
+## Go to terraform directory and use following commands
 
 ````
-terraform validate
+sudo terraform init
 ````
 ````
-terraform apply
+sudo terraform plan
+````
+````
+sudo terraform validate
+````
+````
+sudo terraform apply -auto-approve
+````
+
+## After that hit IP-address:8080 and login as admin user in jenkins and add given plugins given below.
+
+## use this script in pipeline and then save apply and build now
+
+````
+pipeline {
+    agent any
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', credentialsId: 'aniket', url: 'https://github.com/aniket101010/go-backend.git'
+            }
+        }
+        stage('Build Backend') {
+            steps {
+                sh 'docker build -t go-backend ./Backend'
+            }
+        }
+        stage('Build Frontend') {
+            steps {
+                sh 'docker build -t static-frontend ./Frontend'
+            }
+        }
+        stage('Deploy Containers') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
+    }
+}
 ````
