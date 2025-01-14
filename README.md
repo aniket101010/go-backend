@@ -66,6 +66,17 @@ sudo terraform apply -auto-approve
 ````
 
 ## After that hit IP-address:8080 and login as admin user in jenkins and add given plugins given below.
+![Screenshot 2025-01-14 142426](https://github.com/user-attachments/assets/2f9139ac-ff81-486f-a0fe-2f5112a715a4)
+
+- dockercompose plugin
+- docker plugin
+- docker pipline plugin
+- blue ocean plugin
+- pipline plugin
+- github plugin
+- git plugin
+- email extenison
+- credentials plugin
 
 ## use this script in pipeline and then save apply and build now
 
