@@ -48,5 +48,6 @@ resource "docker_container" "reverse_proxy" {
   }
   networks_advanced {
     name = docker_network.app_network.name
-  }
+  }
 }
+
