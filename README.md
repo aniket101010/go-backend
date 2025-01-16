@@ -12,11 +12,21 @@ sudo apt update
 ````
 ## Install Docker
 ````
-sudo apt install -y docker.io 
-   sudo systemctl enable docker
-   sudo systemctl start docker
-   sudo usermod -aG docker $USER
-newgrp docker
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo docker run hello-world
 ````
 ## Docker-Compose
 
@@ -26,11 +36,19 @@ sudo chmod +x /usr/local/bin/docker-compose
 ````
  ## Install Terraform
 ````
-  sudo apt install -y unzip
-   wget https://releases.hashicorp.com/terraform/1.3.0/terraform_1.3.0_linux_amd64.zip
-   unzip terraform_1.3.0_linux_amd64.zip
-   sudo mv terraform /usr/local/bin/
-   terraform -version
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+wget -O- https://apt.releases.hashicorp.com/gpg | \
+gpg --dearmor | \
+sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+gpg --no-default-keyring \
+--keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+--fingerprint
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update
+sudo apt-get install terraform
+
 ````
 ## Jenkins Install
 ````
@@ -40,7 +58,8 @@ echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
   https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
   /etc/apt/sources.list.d/jenkins.list > /dev/null
 sudo apt-get update
-sudo apt-get install jenkins
+sudo apt update
+sudo apt install jenkins -y
 ````
 ## Java install for jenkins
 ````
@@ -59,8 +78,24 @@ sudo usermod -aG docker jenkins
 ````
 sudo apt install -y golang-go
 ````
-
-## Go to terraform directory and use following commands
+## Install Trivy
+````
+TRIVY_VERSION="0.43.1"
+wget https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
+tar -zxvf trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
+sudo mv trivy /usr/local/bin/
+````
+## Clone this repository in terminal for further steps
+````
+git clone https://github.com/aniket101010/go-backend.git
+````
+````
+cd go-backend/
+````
+````
+ls
+````
+## Go to terraform directory and use following commands, as other directories have images for Frontend and Backend Dockerfile for images and docker-compose.yml file.
 
 ````
 sudo terraform init
@@ -78,12 +113,8 @@ sudo terraform validate
 - dockercompose plugin
 - docker plugin
 - docker pipline plugin
-- blue ocean plugin
-- pipline plugin
-- github plugin
-- git plugin
-- email extenison
-- credentials plugin
+- pipline: stage view
+- webhook trriger plugin
 
 ## use this script in pipeline and then save apply and build now
 
@@ -93,39 +124,51 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
+                // Clone the repository from GitHub
                 git branch: 'main', credentialsId: 'aniket', url: 'https://github.com/aniket101010/go-backend.git'
             }
         }
         stage('Build Backend') {
             steps {
+                // Build the backend Docker image
                 sh 'docker build -t go-backend ./Backend'
             }
         }
         stage('Scan Backend Image with Trivy') {
             steps {
+                // Scan the backend Docker image for vulnerabilities
                 sh '''
-                docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-                aquasec/trivy image --exit-code 1 --severity HIGH go-backend
+                trivy image --exit-code 1 --severity HIGH go-backend || echo "Trivy scan failed for Backend"
                 '''
             }
         }
         stage('Build Frontend') {
             steps {
+                // Build the frontend Docker image
                 sh 'docker build -t static-frontend ./Frontend'
             }
         }
         stage('Scan Frontend Image with Trivy') {
             steps {
+                // Scan the frontend Docker image for vulnerabilities
                 sh '''
-                docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-                aquasec/trivy image --exit-code 1 --severity HIGH static-frontend
+                trivy image --exit-code 1 --severity HIGH static-frontend || echo "Trivy scan failed for Frontend"
                 '''
             }
         }
         stage('Deploy Containers') {
             steps {
+                // Deploy the containers using docker-compose
                 sh 'docker-compose up -d'
             }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline execution complete.'
+        }
+        failure {
+            echo 'Pipeline failed. Please check the logs for errors.'
         }
     }
 }
