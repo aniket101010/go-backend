@@ -181,7 +181,10 @@ pipeline {
     }
 }
 ````
-## Step 5 (Optional)
+## Step 5
+### Hit the external ip of the terminal with the port of 82 for frontend and 81 backend
+
+## Step 6 (Optional)
 ### Log in to the AWS Management Console:
 
 Navigate to the EC2 dashboard  Load Balancers section.
