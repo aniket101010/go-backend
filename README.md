@@ -2,9 +2,10 @@
 ## Project workflow
 ## Step 1 > Launch ec2 instances
 ### Prequisites for instance
-instance type - t2.medium
-ami - Ubuntu
-Volume- 25gb SSD
+1)instance type - t2.medium
+2)ami - Ubuntu
+3)Volume- 25gb SSD
+
 Security port inbound
 1) 80  
 2) 8080 
