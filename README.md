@@ -1,16 +1,23 @@
 # Project: go-backend
 ## Project workflow
-- Step 1 > Launch ec2 instances
-- security port inbound
-- 80  
-- 8080 
-- 82
-- 81
--  Step 2 > Install Package 
+## Step 1 > Launch ec2 instances
+### Prequisites for instance
+instance type - t2.medium
+ami - Ubuntu
+Volume- 25gb SSD
+Security port inbound
+1) 80  
+2) 8080 
+3) 82
+4) 81
+## Step 2 > Install Package 
 ````
-sudo apt update
+sudo -i
 ````
-## Install Docker
+````
+apt update
+````
+### Install Docker
 ````
 # Add Docker's official GPG key:
 sudo apt-get update
@@ -28,13 +35,13 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 sudo docker run hello-world
 ````
-## Docker-Compose
+### Docker-Compose
 
 ````
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ````
- ## Install Terraform
+### Install Terraform
 ````
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
 wget -O- https://apt.releases.hashicorp.com/gpg | \
@@ -50,7 +57,7 @@ sudo apt update
 sudo apt-get install terraform
 
 ````
-## Jenkins Install
+### Jenkins Install
 ````
 sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
   https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
@@ -61,7 +68,7 @@ sudo apt-get update
 sudo apt update
 sudo apt install jenkins -y
 ````
-## Java install for jenkins
+### Java install for jenkins
 ````
 sudo apt update
 sudo apt install fontconfig openjdk-17-jre
@@ -74,18 +81,19 @@ sudo systemctl enable jenkins
 sudo usermod -aG docker jenkins
 
 ````
-## Install go package
+### Install go package
 ````
 sudo apt install -y golang-go
 ````
-## Install Trivy
+### Install Trivy
 ````
 TRIVY_VERSION="0.43.1"
 wget https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
 tar -zxvf trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
 sudo mv trivy /usr/local/bin/
 ````
-## Clone this repository in terminal for further steps
+## Step 3
+### Clone this repository in terminal for further steps
 ````
 git clone https://github.com/aniket101010/go-backend.git
 ````
@@ -95,19 +103,19 @@ cd go-backend/
 ````
 ls
 ````
-## Go to terraform directory and use following commands, as other directories have images for Frontend and Backend Dockerfile for images and docker-compose.yml file.
+### Go to terraform directory and use following commands, as other directories have images for Frontend and Backend Dockerfile for images and docker-compose.yml file.
 
 ````
-sudo terraform init
+terraform init
 ````
 ````
-sudo terraform plan
+terraform plan
 ````
 ````
-sudo terraform validate
+terraform validate
 ````
-
-## After that hit IP-address:8080 and login as admin user in jenkins and add given plugins given below.
+## Step 4
+### After that hit IP-address:8080 and login as admin user in jenkins and add given plugins given below.
 ![Screenshot 2025-01-14 142426](https://github.com/user-attachments/assets/2f9139ac-ff81-486f-a0fe-2f5112a715a4)
 
 - dockercompose plugin
@@ -116,7 +124,7 @@ sudo terraform validate
 - pipline: stage view
 - webhook trriger plugin
 
-## use this script in pipeline and then save apply and build now
+### Use this script in pipeline and then save apply and build now
 
 ````
 pipeline {
@@ -173,33 +181,34 @@ pipeline {
     }
 }
 ````
-##Log in to the AWS Management Console:
+## Step 5 (Optional)
+### Log in to the AWS Management Console:
 
 Navigate to the EC2 dashboard  Load Balancers section.
-## Choose a Load Balancer Type
+### Choose a Load Balancer Type
 - Application Load Balancer (ALB): Best for HTTP/HTTPS traffic
 - Configure Load BaName: Provide a meaningful name.lancer Settings
 - Name: Provide a meaningful name
 - Scheme: Choose Internet-facing (public) or Internal (private)
 - IP Address Type: IPv4 or Dualstack (for IPv6 support)
 - Listeners: Add protocol and port (e.g., HTTP:80, HTTPS:443).
-## Select Target VPC and Subnets:
+### Select Target VPC and Subnets:
 - Choose a VPC where the load balancer will operate
 - Select at least two subnets for high availability (different Availability Zones)
-## Configure Security Groups
+### Configure Security Groups
 - Attach or create a security group for the load balancer
 - Allow necessary traffic (e.g., HTTP, HTTPS)
   ![Screenshot 2025-01-15 170401](https://github.com/user-attachments/assets/bd385e8e-076c-46b2-9f42-3a0d06271b00)
   
 ![Screenshot 2025-01-15 171642](https://github.com/user-attachments/assets/ba87ea0c-7214-4ab1-b1ce-a8a5a4ce79c1)
 
-## Create a Target Group
+### Create a Target Group
 - Choose target type: Instances, IP addresses, or Lambda functions
 - Configure the health check protocol, path, and thresholds
 -  Add Targets: Register the EC2 instances or other resources
   ![Screenshot 2025-01-15 171340](https://github.com/user-attachments/assets/7cb152ca-5d1d-4776-b701-875cead9a7be)
 
-## Review and Create
+### Review and Create
 - Review the configuration summary
 - Click Create to provision the load balancer
 
