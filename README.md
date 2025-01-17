@@ -9,8 +9,8 @@
 Security port inbound
 1) 80  
 2) 8080 
-3) 82
-4) 81
+3) 8082
+4) 8081
 ## Step 2 > Install Package 
 ````
 sudo -i
@@ -183,7 +183,7 @@ pipeline {
 }
 ````
 ## Step 5
-### Hit the external ip of the terminal with the port of 82 for frontend and 81 backend
+### Hit the external ip of the terminal with the port of 8082 for frontend and 8081 backend
 
 ## Step 6 (Optional)
 ### Log in to the AWS Management Console:
